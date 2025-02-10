@@ -84,15 +84,6 @@ const App = () => {
       </button>
       <ToastContainer />
 
-      {!gameVisible && (
-        <button
-          onClick={() => setGameVisible(true)} 
-          className="mb-4 p-2 bg-green-500 text-white rounded"
-          style={{ marginTop: "20px" }}
-        >
-          Start Game
-        </button>
-      )}
 
       {gameVisible && (
         <div className="game-container-overlay">
@@ -131,6 +122,17 @@ const App = () => {
       <FloatingButton onClick={handleAddSubject} />
       <ProgressChart darkMode={darkMode} />
       <ChatGPT darkMode={darkMode} />
+
+
+      {!gameVisible && (
+        <button
+          onClick={() => setGameVisible(true)}
+          className="mb-10 p-2 bg-green-500 text-white rounded"
+          style={{ marginTop: "20px" }}
+        >
+          Start Game
+        </button>
+      )}
     </div>
   );
 };
