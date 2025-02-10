@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
-// Import and register Chart.js components
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,13 +10,11 @@ import {
     Legend
 } from "chart.js";
 
-// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const ProgressChart = ({ darkMode }) => {
     const [subjects, setSubjects] = useState([]);
 
-    // Load subjects from localStorage on component mount
     useEffect(() => {
         const storedSubjects = localStorage.getItem("subjects");
         if (storedSubjects) {

@@ -5,20 +5,20 @@ import TextField from '@mui/material/TextField';
 
 
 const NotesDiary = ({ darkMode }) => {
-    const [notes, setNotes] = useState([]); // Local state for storing notes
+    const [notes, setNotes] = useState([]); 
     const [note, setNote] = useState("");
-    const [editingIndex, setEditingIndex] = useState(null); // For editing note
+    const [editingIndex, setEditingIndex] = useState(null); 
 
     const addNote = () => {
         if (note) {
             if (editingIndex !== null) {
-                // Update the existing note if we are editing
+                
                 const updatedNotes = [...notes];
                 updatedNotes[editingIndex] = note;
                 setNotes(updatedNotes);
                 setEditingIndex(null);
             } else {
-                // Add new note
+            
                 setNotes([...notes, note]);
             }
             setNote("");

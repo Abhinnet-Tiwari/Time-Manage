@@ -1,0 +1,65 @@
+/* CSS for Game */
+.game-container-overlay {
+    position: relative;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+
+.score,
+.high-score,
+.time-left {
+    font-size: 20px;
+    color: #333;
+}
+
+.game-over {
+    font-size: 25px;
+    color: red;
+    margin-top: 20px;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#game-area {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.ball {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #ff5722;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.ball:hover {
+    transform: scale(1.1);
+}
