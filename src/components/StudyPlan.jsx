@@ -1,9 +1,9 @@
-import { motion } from "framer-motion";
 
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { generateAIStudyPlan } from "../utils/generatePlan";
 
-const StudyPlan = ({darkMode, subjects, dailyStudyTime, userPreferences }) => {
+const StudyPlan = ({ darkMode, subjects, dailyStudyTime, userPreferences }) => {
     const [schedule, setSchedule] = useState({});
 
     useEffect(() => {
@@ -16,7 +16,16 @@ const StudyPlan = ({darkMode, subjects, dailyStudyTime, userPreferences }) => {
     }, [subjects, dailyStudyTime, userPreferences]);
 
     if (!subjects.length || dailyStudyTime === 0) {
-        return <div>No subjects available or study time not set.</div>;
+        return (
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center text-lg font-semibold text-gray-500"
+            >
+                No subjects available or study time not set.
+            </motion.div>
+        );
     }
 
     return (
@@ -24,18 +33,33 @@ const StudyPlan = ({darkMode, subjects, dailyStudyTime, userPreferences }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className={`${darkMode ? " text-white" : "text - black bg-white"} p-4  rounded-lg shadow-md`}
+            className={`${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"} 
+                p-6 rounded-lg shadow-xl border border-gray-300`}
         >
+            <h2 className="text-2xl font-bold text-center mb-4">
+                🎯 AI-Recommended Study Plan
+            </h2>
 
-            <h2 className="text-lg font-bold mb-2">AI-Recommended Study Plan</h2>
-
-            <ul className="flex ">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Object.keys(schedule).map((subject, index) => (
-                    <motion.li whileHover={{ scale: 1.01 }} className="p-2 border m-2 " key={index}>
-                        <strong>{subject}</strong>: {schedule[subject].time} study time
-                        <ul className=" list-disc ml-4">
+                    <motion.li
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`${darkMode ? "bg-gray-800" : "bg-gray-100"} 
+                            p-4 rounded-lg shadow-md transition-all`}
+                        key={index}
+                    >
+                        <h3 className="text-xl font-semibold mb-2">
+                            📚 {subject}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                            ⏳ {schedule[subject].time} study time
+                        </p>
+                        <ul className="list-disc ml-4 mt-2 text-sm">
                             {schedule[subject].syllabus.map((topic, idx) => (
-                                <li  key={idx}>{topic}</li>
+                                <li key={idx} className="text-gray-400">
+                                    {topic}
+                                </li>
                             ))}
                         </ul>
                     </motion.li>

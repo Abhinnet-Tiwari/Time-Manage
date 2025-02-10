@@ -1,9 +1,9 @@
 
 import { useState } from "react";
 import TextField from '@mui/material/TextField';
+import { motion } from "framer-motion";
 
-
-const SyllabusInput = ({darkMode, subject, subjects, setSubjects }) => {
+const SyllabusInput = ({ darkMode, subject, subjects, setSubjects }) => {
     const [topic, setTopic] = useState("");
 
     const addTopic = (e) => {
@@ -34,28 +34,71 @@ const SyllabusInput = ({darkMode, subject, subjects, setSubjects }) => {
     };
 
     return (
-        <div>
-            <h3 classNmae="mb-2 font-bold">{subject.name} Syllabus</h3>
+        <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"} 
+                p-6 rounded-lg shadow-xl border border-gray-300`}
+        >
+            <h3 className="mb-3 text-lg font-bold text-center">
+                📖 {subject.name} Syllabus
+            </h3>
 
-            <TextField type="text" value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                onKeyDown={addTopic} id="outlined-basic" label="Add Topic" variant="outlined" />
+            <div className="flex gap-3 items-center">
+                <TextField
+                    type="text"
+                    value={topic}
+                    InputLabelProps={{
+                        sx: {
+                            color: darkMode ? '#ffffff' : '#000000',
+                            '&.Mui-focused': { color: darkMode ? '#ffffff' : '#000000' },
+                        },
+                    }}
+                    sx={{
+                        input: { color: darkMode ? 'white' : 'black' },
+                        width: "100%",
+                    }}
+                    onChange={(e) => setTopic(e.target.value)}
+                    onKeyDown={addTopic}
+                    label="Add Topic"
+                    variant="outlined"
+                />
 
-            <button className="text-white ml-5" onClick={addTopic}>Add Topic</button>
-            <ul>
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md transition-all"
+                    onClick={addTopic}
+                >
+                    ➕ Add
+                </motion.button>
+            </div>
+
+            <ul className="mt-4 space-y-2">
                 {subject.syllabus && subject.syllabus.length > 0 ? (
                     subject.syllabus.map((t, index) => (
-                        <li key={index}>
-                            {t}
-                            <button onClick={() => editTopic(index)}>Edit</button>
-                        </li>
+                        <motion.li
+                            key={index}
+                            whileHover={{ scale: 1.02 }}
+                            className="flex justify-between items-center bg-gray-200 dark:bg-gray-800 p-2 rounded-md"
+                        >
+                            <span className="text-gray-700 dark:text-gray-300">{t}</span>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-yellow-500 text-white px-3 py-1 rounded-lg shadow-md transition-all"
+                                onClick={() => editTopic(index)}
+                            >
+                                ✏️ Edit
+                            </motion.button>
+                        </motion.li>
                     ))
                 ) : (
-                    <li>No syllabus items yet</li>
+                    <li className="text-gray-500 text-center">No syllabus items yet</li>
                 )}
-
             </ul>
-        </div>
+        </motion.div>
     );
 };
 

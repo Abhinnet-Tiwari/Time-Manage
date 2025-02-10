@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Game.css"
-// Adding background music
-const backgroundMusic = new Audio("../assets/destination-01.mp3");
-backgroundMusic.loop = true;
+import "./Game.css";
+import { motion } from "framer-motion";
+import { FaPlay, FaPause, FaRedo, FaTimes } from "react-icons/fa";
 
-// Adding click sound
-const clickSound = new Audio("../assets/button.mp3");
+import backgroundMusicFile from "../assets/destination-01.mp3";
+import clickSoundFile from "../assets/button-7.wav";
 
-const Game = ({ stopGame }) => {
+const Game = ({ stopGame, darkMode }) => {
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
     const [timeLeft, setTimeLeft] = useState(20);
@@ -17,13 +16,16 @@ const Game = ({ stopGame }) => {
     const [gameOver, setGameOver] = useState(false);
 
     const gameAreaRef = useRef(null);
+    const backgroundMusic = useRef(new Audio(backgroundMusicFile));
+    const clickSound = useRef(new Audio(clickSoundFile));
 
     useEffect(() => {
         let timeInterval;
         let ballInterval;
 
         if (isRunning) {
-            backgroundMusic.play();
+            backgroundMusic.current.loop = true;
+            backgroundMusic.current.play();
             timeInterval = setInterval(() => {
                 setTimeLeft((prev) => {
                     if (prev <= 1) {
@@ -38,19 +40,18 @@ const Game = ({ stopGame }) => {
                 setBall(getRandomPosition());
             }, ballSpeed);
         } else {
-            backgroundMusic.pause();
+            backgroundMusic.current.pause();
         }
 
         return () => {
             clearInterval(timeInterval);
             clearInterval(ballInterval);
-            backgroundMusic.pause();
+            backgroundMusic.current.pause();
         };
     }, [isRunning, ballSpeed]);
 
     const getRandomPosition = () => {
         if (!gameAreaRef.current) return { x: 0, y: 0 };
-
         const gameArea = gameAreaRef.current;
         const gameAreaWidth = gameArea.offsetWidth;
         const gameAreaHeight = gameArea.offsetHeight;
@@ -62,8 +63,7 @@ const Game = ({ stopGame }) => {
     };
 
     const handleBallClick = () => {
-        clickSound.play();
-
+        clickSound.current.play();
         setScore((prev) => {
             const newScore = prev + 1;
             if (newScore > highScore) setHighScore(newScore);
@@ -93,27 +93,47 @@ const Game = ({ stopGame }) => {
     };
 
     return (
-        <div className="game-container-overlay">
-            <h1 className="score">Score: {score}</h1>
-            <h2 className="high-score">High Score: {highScore}</h2>
-            <h2 className="time-left">Time Left: {timeLeft}s</h2>
-            {gameOver && <div className="game-over">Game Over! Your score is {score}.</div>}
-            <div className="controls">
-                <button onClick={startGame} disabled={isRunning || gameOver}>Start</button>
-                <button onClick={pauseGame} disabled={!isRunning}>Pause</button>
-                <button onClick={resumeGame} disabled={isRunning || gameOver}>Resume</button>
-                <button onClick={stopGame}>Stop</button>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className={`game-container-overlay ${darkMode ? "dark-mode" : ""}`}
+        >
+            <div className="game-header">
+                <h1>🎯 Score: {score}</h1>
+                <h2>🏆 High Score: {highScore}</h2>
+                <h2>⏳ Time Left: {timeLeft}s</h2>
             </div>
-            <div id="game-area" ref={gameAreaRef}>
+
+            {gameOver && (
+                <motion.div
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    className="game-over"
+                >
+                    <p>Game Over! Your score is {score}.</p>
+                </motion.div>
+            )}
+
+            <div className="controls">
+                <button onClick={startGame} disabled={isRunning || gameOver} className="btn start"><FaPlay /></button>
+                <button onClick={pauseGame} disabled={!isRunning} className="btn pause"><FaPause /></button>
+                <button onClick={resumeGame} disabled={isRunning || gameOver} className="btn resume"><FaRedo /></button>
+                <button onClick={stopGame} className="btn stop"><FaTimes /></button>
+            </div>
+
+            <div id="game-area" ref={gameAreaRef} className="game-area">
                 {ball && (
-                    <div
+                    <motion.div
                         className="ball"
                         style={{ left: ball.x, top: ball.y }}
                         onClick={handleBallClick}
-                    ></div>
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        whileTap={{ scale: 0.9 }}
+                    ></motion.div>
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
