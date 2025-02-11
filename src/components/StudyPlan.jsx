@@ -43,18 +43,36 @@ const StudyPlan = ({ darkMode, subjects, dailyStudyTime, userPreferences }) => {
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {Object.keys(schedule).map((subject, index) => (
                     <motion.li
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ scale: 1.05, rotate: 5 }}
                         whileTap={{ scale: 0.95 }}
                         className={`${darkMode ? "bg-gray-800" : "bg-gray-100"} 
-                            p-4 rounded-lg shadow-md transition-all`}
+                            p-6 rounded-lg shadow-lg transition-all hover:bg-blue-100`}
                         key={index}
                     >
-                        <h3 className="text-xl font-semibold mb-2">
+                        <h3 className="text-xl font-semibold mb-2 text-blue-600">
                             📚 {subject}
                         </h3>
-                        <p className="text-sm text-gray-500">
-                            ⏳ {schedule[subject].time} study time
-                        </p>
+
+                        <div className="flex items-center mb-2">
+                            <div className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: schedule[subject].priority > 3 ? "green" : "red" }}></div>
+                            <p className="text-sm text-gray-500">
+                                ⏳ {schedule[subject].time} study time
+                            </p>
+                        </div>
+
+                        <div className="relative pt-2 pb-4">
+                            <div className="absolute w-full h-1 bg-gray-300 rounded-full">
+                                <div
+                                    style={{
+                                        width: `${Math.min(100, schedule[subject].priority * 20)}%`,
+                                        backgroundColor: "#4CAF50",
+                                    }}
+                                    className="h-1 rounded-full"
+                                />
+                            </div>
+                            <p className="mt-2 text-sm text-gray-500">{schedule[subject].priority} / 5 Priority</p>
+                        </div>
+
                         <ul className="list-disc ml-4 mt-2 text-sm">
                             {schedule[subject].syllabus.map((topic, idx) => (
                                 <li key={idx} className="text-gray-400">
@@ -62,6 +80,12 @@ const StudyPlan = ({ darkMode, subjects, dailyStudyTime, userPreferences }) => {
                                 </li>
                             ))}
                         </ul>
+
+                        <div className="mt-4 text-sm text-gray-400">
+                            {schedule[subject].priority > 3
+                                ? "Great! Keep up the good work!"
+                                : "Focus more on this subject to improve your understanding."}
+                        </div>
                     </motion.li>
                 ))}
             </ul>
@@ -70,3 +94,4 @@ const StudyPlan = ({ darkMode, subjects, dailyStudyTime, userPreferences }) => {
 };
 
 export default StudyPlan;
+

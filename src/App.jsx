@@ -1,10 +1,7 @@
 
-
-
 import { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { FaSun, FaMoon } from "react-icons/fa";
-import "react-toastify/dist/ReactToastify.css";
+import { FaSun, FaMoon, FaTrash, FaClock } from "react-icons/fa";
+import { motion } from "framer-motion";
 import SubjectInput from "./components/SubjectInput";
 import StudyPlan from "./components/StudyPlan";
 import NotesDiary from "./components/NotesDiary";
@@ -16,7 +13,7 @@ import ProgressChart from "./components/ProgressChart";
 import ChatGPT from "./components/ChatGPT";
 import JokesAndQuotes from "./components/JokesAndQuotes";
 import Game from "./components/Game";
-import { motion } from "framer-motion";
+import StopwatchAndClock from "./components/StopwatchAndClock";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -24,17 +21,9 @@ const App = () => {
   const [dailyStudyTime, setDailyStudyTime] = useState(0);
   const [showScheduler, setShowScheduler] = useState(false);
   const [gameVisible, setGameVisible] = useState(false);
-
-  const notify = (message) => {
-    toast.info(message, { position: "top-right", autoClose: 3000 });
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      notify("Time to study your next subject!");
-    }, 3600000);
-    return () => clearInterval(interval);
-  }, []);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [clearMessage, setClearMessage] = useState(null);
+  const [showStopwatch, setShowStopwatch] = useState(false);
 
   useEffect(() => {
     const storedSubjects = JSON.parse(localStorage.getItem("subjects")) || [];
@@ -63,8 +52,14 @@ const App = () => {
       localStorage.setItem("subjects", JSON.stringify(updatedSubjects));
       return updatedSubjects;
     });
+  };
 
-    notify(`Added new subject: ${subjectName}`);
+  const handleClearAllData = () => {
+    localStorage.clear();
+    setSubjects([]);
+    setDailyStudyTime(0);
+    setClearMessage("All data has been cleared!");
+    setShowConfirmation(false);
   };
 
   if (!showScheduler) {
@@ -76,7 +71,7 @@ const App = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"} min-h-screen flex flex-col items-center`}
+      className={`${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"} min-h-screen flex flex-col items-center relative`}
     >
       <button
         className="absolute top-4 right-4 p-2 bg-gray-600 text-white rounded-full shadow-lg"
@@ -85,7 +80,18 @@ const App = () => {
         {darkMode ? <FaSun className="text-yellow-500" /> : <FaMoon className="text-blue-500" />}
       </button>
 
-      <ToastContainer />
+      <button
+        className="absolute top-4 left-4 p-2 bg-gray-600 text-white rounded-full shadow-lg"
+        onClick={() => setShowStopwatch(true)}
+      >
+        <FaClock size={24} />
+      </button>
+
+      {clearMessage && (
+        <div className="mt-4 text-green-500 text-xl font-semibold">
+          {clearMessage}
+        </div>
+      )}
 
       {!gameVisible && (
         <motion.button
@@ -147,6 +153,58 @@ const App = () => {
       </motion.div>
 
       <FloatingButton onClick={handleAddSubject} />
+
+      {showStopwatch && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-lg">
+          <div className="bg-white p-8 rounded-lg shadow-xl w-96 relative">
+            <StopwatchAndClock darkMode={darkMode} />
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowStopwatch(false)}
+              className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full"
+            >
+              X
+            </motion.button>
+          </div>
+        </div>
+      )}
+
+      {showConfirmation && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-xl w-96">
+            <h2 className="text-2xl font-bold text-center mb-4">Are you sure?</h2>
+            <p className="text-center mb-4">This will clear all your data from localStorage!</p>
+            <div className="flex justify-between">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleClearAllData}
+                className="px-6 py-2 bg-red-500 text-white rounded-lg shadow-md"
+              >
+                Yes, Clear Data
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowConfirmation(false)}
+                className="px-6 py-2 bg-gray-500 text-white rounded-lg shadow-md"
+              >
+                Cancel
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowConfirmation(true)}
+        className="fixed bottom-4 left-4 p-4 bg-red-500 text-white rounded-full shadow-lg flex items-center justify-center"
+      >
+        <FaTrash size={24} />
+      </motion.button>
     </motion.div>
   );
 };
