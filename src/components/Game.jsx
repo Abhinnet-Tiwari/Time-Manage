@@ -69,7 +69,7 @@ const Game = ({ stopGame, darkMode }) => {
             if (newScore > highScore) setHighScore(newScore);
             return newScore;
         });
-        setTimeLeft((prev) => prev + 3);
+        setTimeLeft((prev) => prev + 1);
         setBall(null);
         if (ballSpeed > 500) setBallSpeed((prev) => prev - 50);
     };
@@ -84,7 +84,10 @@ const Game = ({ stopGame, darkMode }) => {
     };
 
     const resumeGame = () => {
-        setIsRunning(true);
+        setIsRunning(false);
+        setScore(0);
+        setTimeLeft(20);
+        setBallSpeed(2000);
     };
 
     const endGame = () => {
