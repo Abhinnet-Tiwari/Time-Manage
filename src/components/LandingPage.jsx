@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { FaStar, FaClock, FaBook } from "react-icons/fa";
 import bookImage from '../assets/book.webp';
@@ -38,34 +39,34 @@ const LandingPage = ({ onGetStarted }) => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 text-white backdrop-blur-md">
             {/* Navbar */}
-            <nav className="flex justify-between items-center p-5 z-10 relative">
-                <h1 className="text-3xl font-bold tracking-wider text-white">📚 Study Scheduler</h1>
+            <nav className="flex flex-wrap justify-between items-center p-5 z-10 relative w-full">
+                <h1 className="text-2xl md:text-3xl font-bold tracking-wider text-white">📚 Study Scheduler</h1>
                 <button
                     onClick={onGetStarted}
-                    className="bg-white text-blue-600 px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition"
+                    className="bg-white text-blue-600 px-4 md:px-6 py-2 md:py-3 rounded-md font-semibold hover:bg-gray-100 transition text-sm md:text-base mt-2 md:mt-0"
                 >
                     Get Started
                 </button>
             </nav>
 
             {/* Hero Section */}
-            <section className="flex flex-col-reverse md:flex-row items-center justify-between px-10 mt-12">
+            <section className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-10 mt-12">
                 <div className="md:w-1/2 text-center md:text-left">
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="text-4xl md:text-5xl font-bold leading-tight"
+                        className="text-3xl md:text-5xl font-bold leading-tight"
                     >
-                        Organize Your Study Plan <br /> **Smartly & Efficiently!**
+                        Organize Your Study Plan <br /> <span className="font-extrabold">Smartly & Efficiently!</span>
                     </motion.h1>
-                    <p className="mt-6 text-lg">
+                    <p className="mt-6 text-base md:text-lg">
                         Customize your study schedule based on subjects, interest, and time.
                         Track your progress and improve weak areas with AI-based recommendations.
                     </p>
                     <button
                         onClick={onGetStarted}
-                        className="mt-5 px-6 py-3 bg-white text-blue-600 font-bold rounded-md shadow-lg hover:bg-gray-200 transition"
+                        className="mt-5 px-5 md:px-6 py-2 md:py-3 bg-white text-blue-600 font-bold rounded-md shadow-lg hover:bg-gray-200 transition"
                     >
                         Start Scheduling
                     </button>
@@ -81,7 +82,7 @@ const LandingPage = ({ onGetStarted }) => {
                     <img
                         src={bookImage}
                         alt="Study Planner"
-                        className="rounded-lg shadow-xl max-w-full"
+                        className="rounded-lg shadow-xl max-w-full w-3/4 md:w-full"
                     />
                 </motion.div>
             </section>
@@ -132,8 +133,14 @@ const LandingPage = ({ onGetStarted }) => {
             <footer className="mt-20 text-center p-5 bg-gray-900">
                 <p className="text-gray-400">&copy; 2025 Study Scheduler. All rights reserved.</p>
             </footer>
+
+
+            
         </div>
     );
 };
 
 export default LandingPage;
+
+
+

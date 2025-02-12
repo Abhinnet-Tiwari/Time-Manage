@@ -1,5 +1,3 @@
-
-//checking again why is not work
 import { useState, useEffect } from "react";
 import { FaSun, FaMoon, FaTrash, FaClock } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -15,6 +13,8 @@ import ChatGPT from "./components/ChatGPT";
 import JokesAndQuotes from "./components/JokesAndQuotes";
 import Game from "./components/Game";
 import StopwatchAndClock from "./components/StopwatchAndClock";
+import AddSubject from "./components/AddSubject";
+import SubjectList from "./components/SubjectList";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -25,6 +25,7 @@ const App = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [clearMessage, setClearMessage] = useState(null);
   const [showStopwatch, setShowStopwatch] = useState(false);
+  const [showSubjectList, setShowSubjectList] = useState(false); // State for SubjectList visibility
 
   useEffect(() => {
     const storedSubjects = JSON.parse(localStorage.getItem("subjects")) || [];
@@ -106,7 +107,7 @@ const App = () => {
       )}
 
       {gameVisible && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-100">
           <Game darkMode={darkMode} startGame={() => setGameVisible(true)} stopGame={() => setGameVisible(false)} />
         </div>
       )}
@@ -145,7 +146,36 @@ const App = () => {
       >
         <StudyTimer darkMode={darkMode} />
         <JokesAndQuotes darkMode={darkMode} />
-        <SubjectInput darkMode={darkMode} subjects={subjects} setSubjects={setSubjects} />
+        <AddSubject darkMode={darkMode} subjects={subjects} setSubjects={setSubjects} />
+
+        <div className="flex items-center mt-3 mb-3">
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowSubjectList(true)}
+            className="mt-8 px-6 py-2  bg-blue-500 text-white font-bold rounded-lg shadow-md"
+          >
+            Show Subjects
+          </motion.button>
+        </div>
+
+        {showSubjectList && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-lg z-50">
+            <div className="bg-white p-8 rounded-lg shadow-xl w-full sm:w-96">
+              <SubjectList darkMode={darkMode} subjects={subjects} setSubjects={setSubjects} />
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowSubjectList(false)}
+                className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full"
+              >
+                X
+              </motion.button>
+            </div>
+          </div>
+        )}
+
         <StudyPlan darkMode={darkMode} subjects={subjects} dailyStudyTime={dailyStudyTime} />
         <NotesDiary darkMode={darkMode} />
         <Achievements darkMode={darkMode} />
@@ -156,14 +186,14 @@ const App = () => {
       <FloatingButton onClick={handleAddSubject} />
 
       {showStopwatch && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-lg">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-lg z-50">
           <div className="bg-white p-8 rounded-lg shadow-xl w-96 relative">
             <StopwatchAndClock darkMode={darkMode} />
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowStopwatch(false)}
-              className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full"
+              className="absolute top-27 left-20 transform -translate-x-1/2 p-2 bg-red-500 text-white rounded-full"
             >
               X
             </motion.button>

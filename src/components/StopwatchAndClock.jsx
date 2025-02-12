@@ -1,6 +1,9 @@
+
+
 import { useState, useEffect } from "react";
 import { FaPlay, FaPause, FaStop } from "react-icons/fa";
 import { motion } from "framer-motion";
+import backgroundMusicFile from "../assets/destination-01.mp3";
 
 const StopwatchAndClock = ({ darkMode }) => {
     const [stopwatchTime, setStopwatchTime] = useState(0);
@@ -8,7 +11,8 @@ const StopwatchAndClock = ({ darkMode }) => {
     const [timerTime, setTimerTime] = useState(0);
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
-    const [alarmSound, setAlarmSound] = useState(null);
+    const [alarmSound, setAlarmSound] = useState(new Audio(backgroundMusicFile)); 
+    const [isAlarmPlaying, setIsAlarmPlaying] = useState(false);
 
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60);
@@ -46,6 +50,20 @@ const StopwatchAndClock = ({ darkMode }) => {
         setTimerTime(0);
         setIsTimerRunning(false);
     };
+
+
+    useEffect(() => {
+        if (timerTime === 0 && isTimerRunning) {
+            setIsTimerRunning(false); 
+            setIsAlarmPlaying(true);
+            alarmSound.play(); 
+            setTimeout(() => {
+                alarmSound.pause(); 
+                alarmSound.currentTime = 0;
+                setIsAlarmPlaying(false); 
+            }, 3000); 
+        }
+    }, [timerTime, isTimerRunning, alarmSound]);
 
     useEffect(() => {
         let interval;
